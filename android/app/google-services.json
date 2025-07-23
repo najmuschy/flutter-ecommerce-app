@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "291724405113",
+    "project_id": "capstone-hub-c3be8",
+    "storage_bucket": "capstone-hub-c3be8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291724405113:android:4740250ed96c1b4faca7a8",
+        "android_client_info": {
+          "package_name": "com.example.craftybay.crafty_bay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiHNmi75bec7Fm01MU701BZ9hIpHdOdKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291724405113:android:37d9c185b1ec139caca7a8",
+        "android_client_info": {
+          "package_name": "com.ostad.task_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiHNmi75bec7Fm01MU701BZ9hIpHdOdKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

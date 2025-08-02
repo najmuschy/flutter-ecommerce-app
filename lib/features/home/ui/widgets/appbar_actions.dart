@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 class AppBarActions extends StatelessWidget {
-   AppBarActions({
+   const AppBarActions({
     super.key,
     required this.iconData,
     required this.onTap,

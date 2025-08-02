@@ -89,7 +89,14 @@ class AppTheme{
         fontSize: 14,
         color: AppColors.themeColor,
         fontWeight: FontWeight.w400,
-      )
+      ),
+      bodySmall: TextStyle(
+        fontSize: 10,
+        color: Colors.grey.shade600,
+        fontWeight: FontWeight.w400,
+        overflow: TextOverflow.ellipsis,
+      ),
+
     );
   }
   static get navBarTheme{

@@ -8,7 +8,7 @@ import '../../../../app/app_colors.dart';
 
 class HomeCarousel extends StatelessWidget {
    HomeCarousel({super.key});
-  ValueNotifier<int> _currentSlideIndex = ValueNotifier(0) ;
+  final ValueNotifier<int> _currentSlideIndex = ValueNotifier(0) ;
   @override
   Widget build(BuildContext context) {
     return  Column(

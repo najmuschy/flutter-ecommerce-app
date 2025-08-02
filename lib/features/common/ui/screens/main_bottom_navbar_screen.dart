@@ -1,6 +1,8 @@
+import 'package:crafty_bay/features/cart/ui/screens/cart_list_screen.dart';
 import 'package:crafty_bay/features/common/controllers/main_bottom_navbar_controller.dart';
 import 'package:crafty_bay/features/home/ui/screens/home_screen.dart';
 import 'package:crafty_bay/features/home/ui/screens/product_categories_screen.dart';
+import 'package:crafty_bay/features/wishlist/ui/screens/wished_products_screen.dart';
 import 'package:flutter/material.dart' ;
 import 'package:get/get.dart';
 
@@ -13,8 +15,8 @@ class MainBottomNavbarScreen extends StatelessWidget {
   final List<Widget> _screens = [
     HomeScreen(),
     ProductCategoriesScreen(),
-    ProductCategoriesScreen(),
-    ProductCategoriesScreen(),
+    CartListScreen(),
+    WishedProductListScreen(),
     ];
   @override
   Widget build(BuildContext context) {

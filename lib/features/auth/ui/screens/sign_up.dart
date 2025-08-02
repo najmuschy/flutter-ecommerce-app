@@ -1,18 +1,31 @@
+import 'package:crafty_bay/app/urls.dart';
+import 'package:crafty_bay/core/ui/widgets/centered_circular_progress_indicator.dart';
+import 'package:crafty_bay/features/auth/ui/controllers/sign_up_controller.dart';
+import 'package:crafty_bay/features/auth/ui/screens/verify_otp_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../data/models/sign_up_model.dart';
 import '../widgets/app_logo.dart';
 import 'package:email_validator/email_validator.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
   static String name = '/sign-up';
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _firstNameTEController = TextEditingController();
   final TextEditingController _lastNameTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final TextEditingController _mobileTEController = TextEditingController();
-  final TextEditingController _addressTEController = TextEditingController();
   final TextEditingController _cityTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final SignUpController _signUpController = Get.find<SignUpController>() ;
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -21,6 +34,7 @@ class SignUpScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 64, horizontal: 24),
           child: Form(
+            key: _formKey,
             child: Column(
               children: [
                 AppLogo(width: 90, height: 97),
@@ -121,24 +135,12 @@ class SignUpScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 16),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: _addressTEController,
-                  keyboardType: TextInputType.streetAddress,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your full address',
-                  ),
-                  validator: (String? value) {
-                    String address = value ?? '';
-                    if (address.isEmpty) {
-                      return 'Please enter your address';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 24),
-                ElevatedButton(onPressed: onTapSignIn, child: Text('Sign In')),
+                GetBuilder<SignUpController>(builder: (controller){
+                  return Visibility(
+                      visible: controller.signUpProgress==false,
+                      replacement: CenteredCircularProgressIndicator(),
+                      child: ElevatedButton(onPressed: onTapSignIn, child: Text('Sign In')));
+                })
               ],
             ),
           ),
@@ -147,7 +149,37 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  void onTapSignIn() {
-    if (_formKey.currentState!.validate()) {}
+  Future<void> onTapSignIn() async {
+    if (_formKey.currentState!.validate()) {
+      SignUpModel signUpModel = SignUpModel(
+        email: _emailTEController.text.trim(),
+        firstName: _firstNameTEController.text.trim(),
+        lastName: _lastNameTEController.text.trim(),
+        phone: _mobileTEController.text.trim(),
+        city: _cityTEController.text.trim(),
+        password: _passwordTEController.text,
+      );
+      final bool isSuccess = await _signUpController.signUp( signUpModel) ;
+
+
+      if(isSuccess){
+        Get.snackbar('Success', _signUpController.message, colorText: Colors.white, backgroundColor: Colors.green);
+        Navigator.pushNamed(context, VerifyOtpScreen.name, arguments: _emailTEController.text.trim());
+      }
+      else{
+        Get.snackbar('Error', _signUpController.message, colorText: Colors.white, backgroundColor: Colors.red, );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _passwordTEController.dispose();
+    _mobileTEController.dispose();
+    _cityTEController.dispose();
+    super.dispose() ;
   }
 }

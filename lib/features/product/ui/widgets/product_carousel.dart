@@ -2,12 +2,22 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/app_colors.dart';
+import '../../data/model/product_model.dart';
 
 
 
-class ProductCarousel extends StatelessWidget {
-  ProductCarousel({super.key});
+class ProductCarousel extends StatefulWidget {
+  ProductCarousel({super.key, required this.photos});
+
+  List<String> photos ;
+
+  @override
+  State<ProductCarousel> createState() => _ProductCarouselState();
+}
+
+class _ProductCarouselState extends State<ProductCarousel> {
   final ValueNotifier<int> _currentSlideIndex = ValueNotifier(0) ;
+
   @override
   Widget build(BuildContext context) {
     return  Stack(
@@ -16,7 +26,7 @@ class ProductCarousel extends StatelessWidget {
           options: CarouselOptions(height: 269.0, viewportFraction: 1, onPageChanged: (int sliderIndex, _){
             _currentSlideIndex.value = sliderIndex ;
           }),
-          items: [1,2,3,4,5].map((i) {
+          items: widget.photos.map((i) {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
@@ -24,9 +34,10 @@ class ProductCarousel extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 5.0),
                     decoration: BoxDecoration(
                         color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(8)
+                        borderRadius: BorderRadius.circular(8),
+                        image: DecorationImage(image: NetworkImage(i), fit: BoxFit.cover)
                     ),
-                    child: Center(child: Text('text $i', style: TextStyle(fontSize: 16.0),))
+                    child: widget.photos.isEmpty?Center(child: Text('No photos available', style: TextStyle(fontSize: 16.0),)) : null
                 );
               },
             );
@@ -43,7 +54,7 @@ class ProductCarousel extends StatelessWidget {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for(int i=0;i<5; i++)
+                  for(int i=0;i<widget.photos.length; i++)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Container(

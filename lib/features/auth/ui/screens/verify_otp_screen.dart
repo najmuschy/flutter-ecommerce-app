@@ -1,4 +1,3 @@
-import 'package:crafty_bay/app/urls.dart';
 import 'package:crafty_bay/core/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:crafty_bay/features/auth/data/models/verify_otp_model.dart';
 import 'package:crafty_bay/features/auth/ui/controllers/sign_up_controller.dart';

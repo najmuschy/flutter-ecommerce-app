@@ -1,15 +1,26 @@
+import 'package:crafty_bay/features/product/data/model/product_model.dart';
 import 'package:crafty_bay/features/product/ui/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../../app/app_colors.dart';
 
-class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+class ProductCard extends StatefulWidget {
+  ProductCard({super.key, required this.productModel});
+  ProductModel productModel;
 
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, ProductDetailScreen.name);
+        Navigator.pushNamed(
+          context,
+          ProductDetailScreen.name,
+          arguments: widget.productModel,
+        );
       },
       child: Padding(
         padding: EdgeInsets.all(4),
@@ -33,7 +44,7 @@ class ProductCard extends StatelessWidget {
             children: [
               buildProductCardImage(),
               const SizedBox(height: 4),
-              buildProductCardDescription(context)
+              buildProductCardDescription(context),
             ],
           ),
         ),
@@ -41,36 +52,45 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-
-
   Container buildProductCardImage() {
     return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
-              color: AppColors.themeColor.withAlpha(100),
-            ),
-            height: 100,
-            width: 120,
-            child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Image.asset('assets/images/nike-shoe.png'),
-            ),
-          );
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+        color: AppColors.themeColor.withAlpha(100),
+      ),
+      height: 100,
+      width: 160,
+      child: Container(
+        decoration: BoxDecoration(
+          image:
+              widget.productModel.photos.isNotEmpty
+                  ? DecorationImage(
+                    image: NetworkImage(widget.productModel.photos.first),
+                    fit: BoxFit.fill,
+                  )
+                  : DecorationImage(
+                    image: AssetImage('assets/images/no_photo.png', ),
+                    fit: BoxFit.fill
+                  ),
+        ),
+      ),
+    );
   }
+
   Padding buildProductCardDescription(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 1.0),
       child: Column(
         children: [
           Text(
-            'New Year Special Shoe',
+            widget.productModel.title,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 4),
           Row(
             children: [
               Text(
-                '\$100',
+                '\$${widget.productModel.currentPrice}',
                 style: TextStyle(
                   fontSize: 12,
                   color: AppColors.themeColor,
@@ -93,16 +113,17 @@ class ProductCard extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(3),
-                  child: Icon(Icons.favorite_outline,
-                      size: 12, color: Colors.white),
+                  child: Icon(
+                    Icons.favorite_outline,
+                    size: 12,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 }
-
-

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../common/ui/screens/main_bottom_navbar_screen.dart';
 import '../../data/models/login_request_model.dart';
-import 'sign_up.dart';
+
 import 'package:flutter/material.dart';
 import '../widgets/app_logo.dart';
 import 'package:email_validator/email_validator.dart';

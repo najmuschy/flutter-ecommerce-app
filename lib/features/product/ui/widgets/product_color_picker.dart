@@ -22,20 +22,20 @@ class _ProductColorPickerState extends State<ProductColorPicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Color',
+        widget.colors.isNotEmpty?Text('Color',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.black54,
           ),
-        ),
+        ):Container(),
         SizedBox(height: 4),
+
         Row(
           spacing: 4,
-          children: [
-            ...widget.colors.map((color) => buildColorPicker(color)).toList(),
-          ],
+          children:
+            widget.colors.map((color) => buildColorPicker(color)).toList(),
+
         ),
       ],
     );

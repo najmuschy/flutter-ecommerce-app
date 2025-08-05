@@ -1,17 +1,24 @@
+import 'package:crafty_bay/features/product/data/model/product_category_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../app/app_colors.dart';
-import '../../../product/ui/screens/product_list_screen.dart';
-class ProductCategoryItem extends StatelessWidget {
-  const ProductCategoryItem({
-    super.key,
-  });
 
+import '../../../product/ui/screens/product_list_screen.dart';
+class ProductCategoryItem extends StatefulWidget {
+   ProductCategoryItem({
+    super.key,
+    required this.category,
+  });
+  ProductCategoryModel category ;
+  @override
+  State<ProductCategoryItem> createState() => _ProductCategoryItemState();
+}
+
+class _ProductCategoryItemState extends State<ProductCategoryItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, ProductListScreen.name, arguments: 'Electronics');
+        Navigator.pushNamed(context, ProductListScreen.name, arguments: widget.category);
       },
       child: Column(
         children: [
@@ -21,15 +28,23 @@ class ProductCategoryItem extends StatelessWidget {
 
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: AppColors.themeColor.withAlpha(100),
+              color: Colors.transparent,
+              image: DecorationImage(image: NetworkImage(widget.category.iconUrl), fit: BoxFit.cover)
             ),
-            child: Icon(Icons.tv, color: AppColors.themeColor, size: 40),
 
           ),
           SizedBox(height: 8,),
-          Text('Electronics', style: Theme.of(context).textTheme.headlineSmall,)
+          Text(_getTitle(widget.category.title), style: Theme.of(context).textTheme.headlineSmall,)
         ],
       ),
     );
+  }
+
+  String _getTitle(String title){
+    if (title.length > 10) {
+      return '${title.substring(0, 9)}...';
+    } else {
+      return title;
+    }
   }
 }

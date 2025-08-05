@@ -1,7 +1,4 @@
-import 'package:crafty_bay/features/common/controllers/main_bottom_navbar_controller.dart';
-import 'package:crafty_bay/features/common/ui/widgets/product_category_item.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../common/ui/widgets/product_card.dart';
 
@@ -28,7 +25,9 @@ class _WishedProductListScreenState extends State<WishedProductListScreen> {
         ),
         itemCount: 20,
         itemBuilder: (context, index) {
-          return FittedBox(child: ProductCard());
+          return FittedBox(
+              // child: ProductCard()
+          );
         },
       ),
     );

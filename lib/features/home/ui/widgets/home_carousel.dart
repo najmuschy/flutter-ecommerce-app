@@ -1,33 +1,48 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:crafty_bay/features/home/data/model/home_carousel_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_colors.dart';
+import '../../../product/data/model/product_category_model.dart';
 
 
 
 
-class HomeCarousel extends StatelessWidget {
-   HomeCarousel({super.key});
+class HomeCarousel extends StatefulWidget {
+   HomeCarousel({super.key, required this.sliderItems});
+  final List<HomeCarouselModel> sliderItems ;
+
+  @override
+  State<HomeCarousel> createState() => _HomeCarouselState();
+}
+
+class _HomeCarouselState extends State<HomeCarousel> {
   final ValueNotifier<int> _currentSlideIndex = ValueNotifier(0) ;
+
   @override
   Widget build(BuildContext context) {
     return  Column(
       children: [
         CarouselSlider(
-          options: CarouselOptions(height: 163.0, viewportFraction: 1, onPageChanged: (int sliderIndex, _){
+          options: CarouselOptions(height: 190.0, viewportFraction: 1, onPageChanged: (int sliderIndex, _){
             _currentSlideIndex.value = sliderIndex ;
           }),
-          items: [1,2,3,4,5].map((i) {
+          items: widget.sliderItems.map((item) {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
                     width: MediaQuery.of(context).size.width,
                     margin: EdgeInsets.symmetric(horizontal: 5.0),
                     decoration: BoxDecoration(
-                        color: AppColors.themeColor,
+                        image: DecorationImage(
+                            image: NetworkImage(item.photoUrl),
+                            fit: BoxFit.cover
+                        ),
+
+                        color: Colors.transparent,
                         borderRadius: BorderRadius.circular(8)
                     ),
-                    child: Center(child: Text('text $i', style: TextStyle(fontSize: 16.0),))
+                    child: Center(child: Text('', style: TextStyle(fontSize: 16.0),))
                 );
               },
             );
@@ -40,7 +55,7 @@ class HomeCarousel extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                for(int i=0;i<5; i++)
+                for(int i=0;i<widget.sliderItems.length; i++)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Container(

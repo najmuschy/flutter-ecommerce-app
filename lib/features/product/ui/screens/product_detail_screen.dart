@@ -1,4 +1,5 @@
 import 'package:crafty_bay/app/app_colors.dart';
+import 'package:crafty_bay/features/product/data/model/product_model.dart';
 import 'package:crafty_bay/features/product/ui/screens/product_reviews_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +9,9 @@ import '../widgets/product_color_picker.dart';
 import '../widgets/product_size_picker.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  ProductDetailScreen({super.key, required this.productModel});
 
+  ProductModel productModel;
   static String name = '/product-details';
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -23,16 +25,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ProductCarousel(),
-          SizedBox(height: 8),
-          buildProductDetailsTitleSection(),
-          SizedBox(height: 8),
-          buildProductDetailColorSection(),
-          SizedBox(height: 8),
-          buildProductDetailSizeSection(),
-          SizedBox(height: 8),
-          buildProductDescriptionSection(),
-          Spacer(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProductCarousel(photos: widget.productModel.photos),
+                  SizedBox(height: 8),
+                  buildProductDetailsTitleSection(),
+                  SizedBox(height: 8),
+                  buildProductDetailColorSection(),
+                  SizedBox(height: 8),
+                  buildProductDetailSizeSection(),
+                  SizedBox(height: 8),
+                  buildProductDescriptionSection(),
+                ],
+              ),
+            ),
+          ),
           buildProductDetailFooterSection(),
         ],
       ),
@@ -49,7 +59,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Happy New Year Special Deal Save 30%',
+                  widget.productModel.title,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -108,7 +118,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
       child: ProductColorPicker(
-        colors: ['Black', 'Brown', 'Blue', 'White', 'Yellow'],
+        colors: widget.productModel.colors,
         onChanged: (String color) {},
       ),
     );
@@ -118,7 +128,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
       child: ProductSizePicker(
-        sizes: ['XL', 'L', 'M', 'S', 'XS'],
+        sizes:widget.productModel.sizes,
         onChanged: (String color) {},
       ),
     );
@@ -135,9 +145,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 8),
-          Text(
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.',
-          ),
+          Text(widget.productModel.description),
         ],
       ),
     );
@@ -169,7 +177,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
               SizedBox(height: 4),
               Text(
-                '\$1000',
+                '\$${widget.productModel.currentPrice}',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,

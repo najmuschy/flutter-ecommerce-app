@@ -22,14 +22,16 @@ class _ProductSizePickerState extends State<ProductSizePicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Size',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: Colors.black54,
-          ),
-        ),
+        widget.sizes.isNotEmpty
+            ? Text(
+              'Size',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: Colors.black54,
+              ),
+            )
+            : Container(),
         SizedBox(height: 4),
         Row(
           spacing: 6,

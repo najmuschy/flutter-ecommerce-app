@@ -1,19 +1,26 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:crafty_bay/app/app_colors.dart';
 import 'package:crafty_bay/app/asset_path.dart';
-import 'package:crafty_bay/features/home/ui/screens/product_categories_screen.dart';
+import 'package:crafty_bay/core/ui/widgets/centered_circular_progress_indicator.dart';
+import 'package:crafty_bay/features/common/controllers/product_category_list_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/home_carousel_controller.dart';
+import 'package:crafty_bay/features/product/ui/screens/product_categories_screen.dart';
 import 'package:crafty_bay/features/home/ui/widgets/home_carousel.dart';
+import 'package:crafty_bay/features/product/ui/screens/product_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 
+import '../../../common/controllers/product_list_controller.dart';
 import '../../../common/ui/widgets/product_card.dart';
 import '../../../common/ui/widgets/product_category_item.dart';
 import '../widgets/appbar_actions.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
   static String name = '/home';
-
+  final HomeCarouselController _homeCarouselController =
+      Get.find<HomeCarouselController>();
+  final ProductCategoryListController _productCategoryListController = Get.find<ProductCategoryListController>();
+  final ProductListController _productListController = Get.find<ProductListController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +32,19 @@ class HomeScreen extends StatelessWidget {
             children: [
               SizedBox(width: 383, child: buildSearchBar()),
               SizedBox(height: 8),
-              HomeCarousel(),
+              GetBuilder(
+                init: _homeCarouselController,
+                builder: (controller) {
+                  return SizedBox(
+                    height: 212,
+                    child: Visibility(
+                      visible: controller.carouselInProgress == false,
+                      replacement: CenteredCircularProgressIndicator(),
+                      child: HomeCarousel(sliderItems : controller.homeCarouselModels),
+                    ),
+                  );
+                },
+              ),
               SizedBox(height: 8),
               buildSectionHeading(
                 context,
@@ -38,7 +57,9 @@ class HomeScreen extends StatelessWidget {
               buildSectionHeading(
                 context,
                 title: 'Popular',
-                onTapSeeAll: () {},
+                onTapSeeAll: () {
+
+                },
               ),
               buildPopularProducts(),
               buildSectionHeading(
@@ -48,14 +69,15 @@ class HomeScreen extends StatelessWidget {
               ),
               buildSpecialProducts(),
               buildSectionHeading(context, title: 'New', onTapSeeAll: () {}),
-              buildNewProducts()
+              buildNewProducts(),
             ],
           ),
         ),
       ),
     );
   }
-    AppBar buildAppBar() {
+
+  AppBar buildAppBar() {
     return AppBar(
       title: SvgPicture.asset(AssetPaths.navLogo),
       actions: [
@@ -125,16 +147,26 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
   SizedBox buildProductCategories() {
     return SizedBox(
       height: 100,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: ProductCategoryItem(),
+      child: GetBuilder(
+        init: _productCategoryListController,
+        builder: (controller){
+          return Visibility(
+            visible: controller.categoryInitialLoadInProgress == false,
+            replacement: CenteredCircularProgressIndicator(),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: ProductCategoryItem(category: _productCategoryListController.productCategoryModels[index],),
+                );
+              },
+            ),
           );
         },
       ),
@@ -143,44 +175,53 @@ class HomeScreen extends StatelessWidget {
 
   Widget buildPopularProducts() {
     return SizedBox(
-      height:160,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 10 ,
-          itemBuilder: (context, index) {
-            return ProductCard();
-
-          }),
+      height: 160,
+      child: GetBuilder(
+        init: _productListController,
+        builder: (controller){
+          if(controller.productLoadInProgress){
+            return CenteredCircularProgressIndicator() ;
+          }
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.productModels.length,
+            itemBuilder: (context, index) {
+              return
+                ProductCard(productModel: controller.productModels[index],);
+              ;
+            },
+          );
+        },
+        
+      ),
     );
   }
 
   Widget buildSpecialProducts() {
     return SizedBox(
-      height:160,
+      height: 160,
       child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 10 ,
-          itemBuilder: (context, index) {
-            return ProductCard();
-
-          }),
+        scrollDirection: Axis.horizontal,
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          // return ProductCard();
+          return;
+        },
+      ),
     );
   }
+
   Widget buildNewProducts() {
     return SizedBox(
-      height:160,
+      height: 160,
       child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: 10 ,
-          itemBuilder: (context, index) {
-            return ProductCard();
-
-          }),
+        scrollDirection: Axis.horizontal,
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          // return ProductCard();
+          return;
+        },
+      ),
     );
   }
-
 }
-
-
-
-

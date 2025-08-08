@@ -1,5 +1,6 @@
 import 'package:crafty_bay/core/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:crafty_bay/features/auth/ui/controllers/login_controller.dart';
+import 'package:crafty_bay/features/auth/ui/screens/sign_up.dart';
 import 'package:get/get.dart';
 
 import '../../../common/ui/screens/main_bottom_navbar_screen.dart';
@@ -79,7 +80,13 @@ class LoginScreen extends StatelessWidget {
                           child: Text('Sign In'),
                         ),
                       );
-                    })
+                    }),
+                SizedBox(height: 24),
+                Center(
+                  child: TextButton(onPressed: (){
+                    Navigator.pushNamed(context, SignUpScreen.name);
+                  }, child: Text('Create New Account')),
+                ),
 
 
               ],

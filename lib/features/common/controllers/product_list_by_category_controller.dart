@@ -10,6 +10,7 @@ import '../../../../core/services/network/network_client.dart';
 
 class ProductListByCategoryController extends GetxController{
 
+
   final List<ProductModel> _productModels = [] ;
   List<ProductModel> get productModels => _productModels ;
 

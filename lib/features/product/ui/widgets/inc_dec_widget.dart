@@ -21,11 +21,11 @@ class _IncDecWidgetState extends State<IncDecWidget> {
         GestureDetector(
           onTap: () {
             if (value >1) {
-                value--;
+              value--;
+
+              setState(() {});
+              widget.onChanged(value);
             }
-              setState(() {
-              });
-            widget.onChanged(value) ;
           },
           child: GestureDetector(child: buildValueChanger(icon: Icons.remove)),
         ),
@@ -33,11 +33,11 @@ class _IncDecWidgetState extends State<IncDecWidget> {
         GestureDetector(
           onTap: () {
             if (value < 20) {
-                value++;
+              value++;
+
+              setState(() {});
+              widget.onChanged(value);
             }
-              setState(() {
-              });
-            widget.onChanged(value) ;
           },
           child: buildValueChanger(icon: Icons.add),
         ),

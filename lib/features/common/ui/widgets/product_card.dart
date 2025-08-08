@@ -26,7 +26,8 @@ class _ProductCardState extends State<ProductCard> {
         padding: EdgeInsets.all(4),
         child: Container(
           margin: EdgeInsets.only(right: 4),
-          width: 120,
+          width: 125,
+
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),

@@ -18,7 +18,9 @@ class _ProductCategoryItemState extends State<ProductCategoryItem> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.pushNamed(context, ProductListScreen.name, arguments: widget.category);
+        Navigator.pushNamed(context, ProductListScreen.name, arguments: {
+          'category' : widget.category
+        });
       },
       child: Column(
         children: [

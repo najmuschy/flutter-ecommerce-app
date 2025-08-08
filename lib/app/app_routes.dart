@@ -39,9 +39,13 @@ class AppRoutes{
     else if(settings.name== ProductCategoriesScreen.name){
       screenWidget = ProductCategoriesScreen();
     }
-    else if(settings.name== ProductListScreen.name){
-      ProductCategoryModel category = settings.arguments as ProductCategoryModel ;
-      screenWidget = ProductListScreen(category: category);
+    else if(settings.name == ProductListScreen.name){
+      final args = settings.arguments as Map<String, dynamic>;
+      screenWidget = ProductListScreen(
+        category: args['category'],
+        categoryId: args['categoryId'],
+        categoryTitle: args['categoryTitle'],
+      );
     }
     else if(settings.name== ProductDetailScreen.name){
       ProductModel product = settings.arguments as ProductModel ;

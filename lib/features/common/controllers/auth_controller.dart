@@ -27,8 +27,11 @@ class AuthController extends GetxController{
     token = sharedPreferences.getString(tokenKey) ;
     String? userDataString = sharedPreferences.getString(userData) ;
     if(userDataString != null){
+
       userModel = UserModel.fromJson(jsonDecode(userDataString));
+      print(userModel!.email);
     }
+    print(token) ;
   }
 
   Future<bool> confirmLogin() async{

@@ -1,7 +1,11 @@
 import 'package:crafty_bay/app/app_colors.dart';
+import 'package:crafty_bay/features/auth/ui/screens/login_screen.dart';
+import 'package:crafty_bay/features/cart/ui/controller/add_to_cart_controller.dart';
+import 'package:crafty_bay/features/common/controllers/auth_controller.dart';
 import 'package:crafty_bay/features/product/data/model/product_model.dart';
 import 'package:crafty_bay/features/product/ui/screens/product_reviews_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../widgets/inc_dec_widget.dart';
 import '../widgets/product_carousel.dart';
@@ -18,6 +22,7 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final AddToCartController _addToCartController = Get.find<AddToCartController>() ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,10 +105,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(3),
-                  child: Icon(
-                    Icons.favorite_outline,
-                    size: 18,
-                    color: Colors.white,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.favorite_outline,
+                      size: 18,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -186,25 +194,48 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               ),
             ],
           ),
-          TextButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.themeColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text(
-              'Add to Cart',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+          GetBuilder(
+            init: _addToCartController,
+            builder: (controller){
+              return Visibility(
+                visible: controller.inProgress==false,
+                replacement: CircularProgressIndicator(),
+                child: TextButton(
+                  onPressed:()=> onTapAddToCart(widget.productModel.id),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.themeColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Add to Cart',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              );
+            }
           ),
         ],
       ),
     );
+  }
+  Future<void> onTapAddToCart(String id) async {
+    if(await Get.find<AuthController>().confirmLogin()){
+      bool isSuccess = await _addToCartController.addToCart(id);
+      if(isSuccess){
+        Get.snackbar('Success', _addToCartController.message, colorText: Colors.white, backgroundColor: Colors.green);
+      }
+      else{
+        Get.snackbar('Failed', _addToCartController.message,colorText: Colors.white, backgroundColor: Colors.red);
+      }
+    }else{
+      Navigator.pushNamed(context, LoginScreen.name) ;
+
+    }
   }
 }

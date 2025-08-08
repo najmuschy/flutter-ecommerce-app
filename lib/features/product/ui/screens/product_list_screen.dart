@@ -7,9 +7,11 @@ import '../../../common/controllers/product_list_by_category_controller.dart';
 import '../../../common/ui/widgets/product_card.dart';
 
 class ProductListScreen extends StatefulWidget {
-  ProductListScreen({super.key, required this.category});
+  ProductListScreen({super.key,  this.category, this.categoryId, this.categoryTitle});
 
-  final ProductCategoryModel category;
+  final ProductCategoryModel? category;
+  final String? categoryId;
+  final String? categoryTitle;
   static String name = '/product-list';
 
   @override
@@ -22,25 +24,32 @@ class _ProductListScreenState extends State<ProductListScreen> {
       ProductListByCategoryController();
   @override
   void initState() {
-    _productListByCategoryController.getProductList(widget.category.id);
+    if (widget.categoryId != null) {
+      _productListByCategoryController.getProductList(widget.categoryId!);
+    }else{
+    _productListByCategoryController.getProductList(widget.category!.id);
+    }
     _scrollController.addListener(_loadMoreData);
     super.initState();
   }
 
   void _loadMoreData() {
     if (_scrollController.position.extentAfter < 300) {
-      _productListByCategoryController.getProductList(widget.category.id);
+      if (widget.categoryId != null) {
+        _productListByCategoryController.getProductList(widget.categoryId!);
+      }else{
+      _productListByCategoryController.getProductList(widget.category!.id);
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.category.title)),
+      appBar: AppBar(title: widget.categoryTitle!=null ? Text(widget.categoryTitle!) :Text(widget.category!.title)),
       body: GetBuilder<ProductListByCategoryController>(
         init: _productListByCategoryController,
-        tag: 'category-local-instance',
-        builder: (controller) {
+           builder: (controller) {
           if (_productListByCategoryController.productInitialLoadInProgress) {
             return CenteredCircularProgressIndicator();
           }

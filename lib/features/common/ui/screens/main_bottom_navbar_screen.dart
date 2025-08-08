@@ -1,13 +1,17 @@
 import 'package:crafty_bay/features/cart/ui/screens/cart_list_screen.dart';
+import 'package:crafty_bay/features/common/controllers/auth_controller.dart';
 import 'package:crafty_bay/features/common/controllers/main_bottom_navbar_controller.dart';
 import 'package:crafty_bay/features/common/controllers/product_category_list_controller.dart';
-import 'package:crafty_bay/features/common/controllers/product_list_controller.dart';
 import 'package:crafty_bay/features/home/ui/controller/home_carousel_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/new_product_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/popular_product_controller.dart';
 import 'package:crafty_bay/features/home/ui/screens/home_screen.dart';
 import 'package:crafty_bay/features/product/ui/screens/product_categories_screen.dart';
 import 'package:crafty_bay/features/wishlist/ui/screens/wished_products_screen.dart';
 import 'package:flutter/material.dart' ;
 import 'package:get/get.dart';
+
+import '../../../home/ui/controller/special_product_controller.dart';
 
 
 
@@ -24,9 +28,15 @@ class _MainBottomNavbarScreenState extends State<MainBottomNavbarScreen> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_){
+
+    });
+    Get.find<AuthController>().getUserData() ;
     Get.find<HomeCarouselController>().getHomeCarousel();
     Get.find<ProductCategoryListController>().getCategoryList();
-    Get.find<ProductListController>().getProductList();
+    Get.find<PopularProductController>().getPopularProducts();
+    Get.find<SpecialProductController>().getSpecialProducts();
+    Get.find<NewProductController>().getNewProducts();
     super.initState();
   }
   final List<Widget> _screens = [

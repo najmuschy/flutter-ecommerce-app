@@ -109,12 +109,12 @@ class NetworkClient{
 
   }
 
-  Future<NetworkResponse> deleteRequest (String url, Map<String,dynamic> body) async{
+  Future<NetworkResponse> deleteRequest (String url) async{
 
     Uri uri = Uri.parse(url);
 
-    requestLogger(url, headers: commonHeaders(), body: body);
-    Response response = await delete(uri, headers: commonHeaders(), body: jsonEncode(body));
+    requestLogger(url, headers: commonHeaders());
+    Response response = await delete(uri, headers: commonHeaders());
     if(response.statusCode == 200 || response.statusCode == 201){
       final responseBody = json.decode(response.body);
       responseLogger(response) ;

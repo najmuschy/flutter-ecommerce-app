@@ -1,11 +1,25 @@
+import 'package:crafty_bay/features/cart/ui/controller/cart_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../app/app_colors.dart';
 import '../../../product/ui/widgets/inc_dec_widget.dart';
 
-class CartListScreen extends StatelessWidget {
+class CartListScreen extends StatefulWidget {
   const CartListScreen({super.key});
 
+  @override
+  State<CartListScreen> createState() => _CartListScreenState();
+}
+
+class _CartListScreenState extends State<CartListScreen> {
+  final CartController _cartController = Get.find<CartController>() ;
+  @override
+  void initState() {
+
+      Get.find<CartController>().getCartList();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,51 +27,62 @@ class CartListScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView.separated(
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical:4 ),
-                  child: Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(padding: EdgeInsets.all(8), width:80, height:80 ,child: Image.asset('assets/images/nike-shoe.png', fit: BoxFit.fill,)),
-                          SizedBox(width: 4,),
-                          Expanded(
-                            child: Column(
-                              spacing: 10,
+            child: GetBuilder(
+              init: _cartController,
+              builder: (controller){
+                return ListView.separated(
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical:4 ),
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children:[
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  children: [
-                                    Text('New Year Special Shoe', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
-                                    Text('Color:Red, Size: L')
-                                  ],
+                              children: [
+                                Container(padding: EdgeInsets.all(8), width:80, height:80 ,child: controller.cartList[index].productModel.photos.isNotEmpty?Image.network(controller.cartList[index].productModel.photos.first):Image.asset('assets/images/no_photo.png')),
+                                SizedBox(width: 4,),
+                                Expanded(
+                                  flex: 20,
+                                  child: Column(
+                                      spacing: 10,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children:[
+                                        Wrap(
+                                          direction: Axis.vertical,
+                                          children: [
+                                            Text(getProductTitle(controller.cartList[index].productModel.title), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),),
+                                            Text('Color:Red, Size: L')
+                                          ],
+                                        ),
+                                        SizedBox(height: 16,),
+                                        Text('\$${controller.cartList[index].productModel.currentPrice}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: AppColors.themeColor),)
+                                      ]
+                                  ),
                                 ),
-                                SizedBox(height: 16,),
-                                Text('\$100', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: AppColors.themeColor),)
+                                Column(
+                                  spacing: 30,
+                                  children: [
+                                    IconButton(onPressed: (){
+                                      _cartController.deleteCartList(controller.cartList[index].id);
+                                    }, icon:Icon(Icons.delete_outline, color: Colors.red,)),
+                                    IncDecWidget(onChanged: (int value){
+                                      _cartController.updateQuantity(controller.cartList[index].productModel.id, value);
+                                    })
+                                  ],
+                                )
                               ]
-                            ),
                           ),
-                          Column(
-                            spacing: 30,
-                            children: [
-                              IconButton(onPressed: (){}, icon:Icon(Icons.delete_outline, color: Colors.red,)),
-                              IncDecWidget(onChanged: (int value){})
-                            ],
-                          )
-                          ]
+                        ),
                       ),
-                    ),
-                  ),
 
+                    );
+                  },
+                  separatorBuilder: (_, index) => SizedBox(height: 5),
+                  itemCount: _cartController.cartList.length,
                 );
               },
-              separatorBuilder: (_, index) => SizedBox(height: 5),
-              itemCount: 3,
+
             ),
           ),
           buildCartScreenFooterSection(),
@@ -91,13 +116,18 @@ class CartListScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 4),
-              Text(
-                '\$1000',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.themeColor.withAlpha(500),
-                ),
+              GetBuilder(
+                init: _cartController,
+                builder: (controller){
+                  return Text(
+                    _cartController.total.toString(),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.themeColor.withAlpha(500),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -121,5 +151,11 @@ class CartListScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+  String getProductTitle(String title){
+    if(title.length > 10){
+     return '${title.substring(0, 10)}...';
+    }
+    return title ;
   }
 }

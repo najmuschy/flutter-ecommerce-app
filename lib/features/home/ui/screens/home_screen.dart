@@ -2,6 +2,10 @@ import 'package:crafty_bay/app/asset_path.dart';
 import 'package:crafty_bay/core/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:crafty_bay/features/common/controllers/product_category_list_controller.dart';
 import 'package:crafty_bay/features/home/ui/controller/home_carousel_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/new_product_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/popular_product_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/special_product_controller.dart';
+import 'package:crafty_bay/features/home/ui/controller/special_product_controller.dart';
 import 'package:crafty_bay/features/product/ui/screens/product_categories_screen.dart';
 import 'package:crafty_bay/features/home/ui/widgets/home_carousel.dart';
 import 'package:crafty_bay/features/product/ui/screens/product_list_screen.dart';
@@ -9,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../../common/controllers/product_list_controller.dart';
 import '../../../common/ui/widgets/product_card.dart';
 import '../../../common/ui/widgets/product_category_item.dart';
 import '../widgets/appbar_actions.dart';
@@ -19,8 +22,10 @@ class HomeScreen extends StatelessWidget {
   static String name = '/home';
   final HomeCarouselController _homeCarouselController =
       Get.find<HomeCarouselController>();
+  final PopularProductController _popularProductController = Get.find<PopularProductController>();
+  final NewProductController _newProductController = Get.find<NewProductController>();
   final ProductCategoryListController _productCategoryListController = Get.find<ProductCategoryListController>();
-  final ProductListController _productListController = Get.find<ProductListController>();
+  final SpecialProductController _specialProductController = Get.find<SpecialProductController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,17 +63,27 @@ class HomeScreen extends StatelessWidget {
                 context,
                 title: 'Popular',
                 onTapSeeAll: () {
-
+                  Navigator.pushNamed(context, ProductListScreen.name, arguments: {
+                    'categoryId' : '67c35af85e8a445235de197b',
+                    'categoryTitle' : 'Popular'} );
                 },
               ),
               buildPopularProducts(),
               buildSectionHeading(
                 context,
                 title: 'Special',
-                onTapSeeAll: () {},
+                onTapSeeAll: () {
+                  Navigator.pushNamed(context, ProductListScreen.name, arguments: {
+                    'categoryId' : '67c35af85e8a445235de197b',
+                    'categoryTitle' : 'Popular'} );
+                },
               ),
               buildSpecialProducts(),
-              buildSectionHeading(context, title: 'New', onTapSeeAll: () {}),
+              buildSectionHeading(context, title: 'New', onTapSeeAll: () {
+                Navigator.pushNamed(context, ProductListScreen.name, arguments: {
+                  'categoryId' : '67cd33432e43d538695ea4bc',
+                  'categoryTitle' : 'New'} );
+              }),
               buildNewProducts(),
             ],
           ),
@@ -177,9 +192,9 @@ class HomeScreen extends StatelessWidget {
     return SizedBox(
       height: 160,
       child: GetBuilder(
-        init: _productListController,
+        init: _popularProductController,
         builder: (controller){
-          if(controller.productLoadInProgress){
+          if(controller.inProgress==true){
             return CenteredCircularProgressIndicator() ;
           }
           return ListView.builder(
@@ -188,7 +203,6 @@ class HomeScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return
                 ProductCard(productModel: controller.productModels[index],);
-              ;
             },
           );
         },
@@ -200,13 +214,21 @@ class HomeScreen extends StatelessWidget {
   Widget buildSpecialProducts() {
     return SizedBox(
       height: 160,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          // return ProductCard();
-          return;
-        },
+      child: GetBuilder(
+        init: _specialProductController,
+        builder: (controller) {
+          if(controller.inProgress){
+            return CenteredCircularProgressIndicator() ;
+          }
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.productModels.length,
+            itemBuilder: (context, index) {
+              return ProductCard(productModel: controller.productModels[index],);
+
+            },
+          );
+        }
       ),
     );
   }
@@ -214,14 +236,21 @@ class HomeScreen extends StatelessWidget {
   Widget buildNewProducts() {
     return SizedBox(
       height: 160,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          // return ProductCard();
-          return;
-        },
-      ),
+      child: GetBuilder(
+        init: _newProductController,
+        builder: (controller) {
+          if (controller.inProgress) {
+            return CenteredCircularProgressIndicator();
+          }
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.productModels.length,
+            itemBuilder: (context, index) {
+              return ProductCard(productModel: controller.productModels[index],);
+
+            },
+          );
+        }),
     );
   }
 }

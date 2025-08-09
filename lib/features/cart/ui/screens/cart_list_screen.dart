@@ -1,5 +1,11 @@
+import 'dart:math';
+
 import 'package:crafty_bay/features/cart/ui/controller/cart_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sslcommerz/model/SSLCSdkType.dart';
+import 'package:flutter_sslcommerz/model/SSLCommerzInitialization.dart';
+import 'package:flutter_sslcommerz/model/SSLCurrencyType.dart';
+import 'package:flutter_sslcommerz/sslcommerz.dart';
 import 'package:get/get.dart';
 
 import '../../../../app/app_colors.dart';
@@ -132,7 +138,7 @@ class _CartListScreenState extends State<CartListScreen> {
             ],
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () =>payNow(_cartController.total.toDouble()),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.themeColor,
               shape: RoundedRectangleBorder(
@@ -157,5 +163,30 @@ class _CartListScreenState extends State<CartListScreen> {
      return '${title.substring(0, 10)}...';
     }
     return title ;
+  }
+
+  Future<void> payNow(double amount) async {
+    Sslcommerz sslcommerz = Sslcommerz(
+        initializer: SSLCommerzInitialization(
+          //   ipn_url: "www.ipnurl.com",
+            multi_card_name: "visa,master,bkash",
+            currency: SSLCurrencyType.BDT,
+            product_category: "Any",
+            sdkType: SSLCSdkType.TESTBOX,
+            store_id: "cratf6895ba7cef528",
+            store_passwd: "cratf6895ba7cef528@ssl",
+            total_amount: amount,
+            tran_id: Random().hashCode.toString()));
+
+    final response = await sslcommerz.payNow() ;
+    if(response.status== 'VALID'){
+      Get.snackbar('Success', 'Payment Successful', colorText: Colors.white, backgroundColor: Colors.green); 
+    }
+    else if(response.status=='FAILED'){
+      Get.snackbar('Failed', 'Payment Failed', colorText: Colors.white, backgroundColor: Colors.red);
+    }
+    else{
+      Get.snackbar('Payment Failed', 'Something went wrong', colorText: Colors.white, backgroundColor: Colors.red);
+    }
   }
 }

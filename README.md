@@ -1,35 +1,66 @@
 # 🛒 Crafty Bay
 
-Crafty Bay is a modern Flutter-based e-commerce application built with **Feature-First Modular Architecture** and **GetX** for state management.  
-It provides a clean, scalable structure for building multi-feature apps while keeping the code maintainable and organized.
+A Flutter-based e-commerce app built with a **Feature-First Modular Architecture** and **MVVM-style state management** using [GetX](https://pub.dev/packages/get).  
+The app is designed to be scalable, maintainable, and easy to extend for new features.
 
 ---
 
-## 📱 Features
+## 📌 Features
 
-- 🔑 User Authentication (Sign up, Login, OTP Verification)
-- 🏠 Home with Carousel & Featured Products
-- 🛍️ Product Listing with Categories
-- 🛒 Cart Management
-- ❤️ Wishlist
-- 🛠️ Modular & Feature-based code organization
-- 📡 API Integration with `http`
-- 🔔 State Management & Navigation with **GetX**
-- ☁️ Firebase integration for Crashlytics
+- **Authentication**
+  - Email-based login
+  - OTP verification
+- **Product Management**
+  - Product listing
+  - Product details
+- **Cart**
+  - Add/remove items
+  - View cart summary
+- **Checkout**
+  - SslCommerz payment gateway integration
+- **UI Enhancements**
+  - Image sliders (carousel)
+  - SVG assets support
+- **Persistent Storage**
+  - Local preferences for token/session data
+- **Error Tracking**
+  - Firebase Crashlytics integration
 
 ---
 
-## 🏗️ Architecture
+## 🏗 Architecture
 
-This project follows a **Feature-First Modular Architecture** with an **MVC/MVVM flavor**, powered by **GetX**.
+### **Feature-First Modular Structure**
+Each feature (e.g., Auth, Cart, Product) contains its own:
+- **Data Layer** → Models, API-related code
+- **UI Layer** → Screens, Widgets
+- **Controller Layer** → GetX Controllers managing state & API calls
 
-**Structure Overview:**
+```plaintext
+lib/
+├── core/               # Shared services, reusable widgets, utils
+├── features/
+│   ├── auth/
+│   │   ├── data/models/
+│   │   ├── ui/screens/
+│   │   ├── ui/controllers/
+│   ├── cart/
+│   ├── home/
+│   ├── product/
+│   └── wishlist/
+```
+*MVVM with GetX**
+  Model → Plain Dart classes for structured data (e.g., ProductModel, UserModel)
 
-- **Features** – each major app feature is in its own folder with:
-  - `data` → Models, data classes
-  - `ui` → Screens, Widgets, and Controllers
-- **Core** – reusable services and shared UI components
-- **App** – global configs, themes, routes, and bindings
+  View → Flutter UI widgets/screens that display data
+  
+  ViewModel (GetxController) → Handles:
 
-**Flow:**
+  API calls
+
+  Business logic
+
+  Managing Rx reactive state
+
+  Updating Models
 
